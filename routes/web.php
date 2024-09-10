@@ -40,4 +40,8 @@ Route::get('/ReadProfile', [ProfileController::class, 'ReadProfile'])->middlewar
 
 
 
+// Product Review
+Route::post('/CreateProductReview', [ProductController::class, 'CreateProductReview'])->middleware([TokenAuthenticate::class]);
+
+
 

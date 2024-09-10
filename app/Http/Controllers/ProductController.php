@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Helper\ResponseHelper;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Models\ProductDetail;
 use App\Models\ProductReview;
 use App\Models\ProductSlider;
+use App\Helper\ResponseHelper;
+use App\Models\CustomerProfile;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
     class ProductController extends Controller
     {
@@ -58,6 +59,26 @@ use Illuminate\Http\Request;
         }
     
     
+
+
+    public function CreateProductReview(Request $request):JsonResponse{
+        $user_id=$request->header('id');
+        $profile=CustomerProfile::where('user_id',$user_id)->first();
+
+        if($profile){
+            $request->merge(['customer_id' =>$profile->id]);
+            $data=ProductReview::updateOrCreate(
+                ['customer_id' => $profile->id,'product_id'=>$request->input('product_id')],
+                $request->input()
+            );
+            return ResponseHelper::Out('success',$data,200);
+        }
+        else{
+            return ResponseHelper::Out('fail','Customer profile not exists',200);
+        }
+
+    }
+
     
     
     }
